@@ -28,6 +28,9 @@ def run():
             case 6:
                 logger.info(LEXICON[LANG]['call_shutdown'])
                 menu.shutdown()
+            case _:
+                logger.debug(LEXICON[LANG]['unknown_command'].format(command))
+                print(LEXICON[LANG]['unknown_command'].format(command))
 
 
 logger = logging.getLogger(__name__)

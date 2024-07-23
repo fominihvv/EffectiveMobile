@@ -8,37 +8,32 @@ from lexicon.lexicon import LEXICON
 class Book:
     """Класс книги"""
 
-    def __init__(self, title: str, author: str, year: int, status: bool = True) -> None:
+    def __init__(self, title: str, author: str, year: int, book_id: int = None, status: str = 'в наличии') -> None:
         logger.debug(LEXICON[LANG]['init_book'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
+        logger.debug(LEXICON[LANG]['book_details'].format(book_id, title, author, year, status))
         self.title = title
         self.author = author
         self.year = year
         self.status = status
-
-    @property
-    def id(self) -> int:
-        """Получение хэша книги"""
-        logger.debug(LEXICON[LANG]['get_hash'])
-        logger.debug(LEXICON[LANG]['book_details'].format(self.title, self.author, self.year))
-        return hash((self.title, self.author, self.year))
+        self.id = book_id
 
     def __str__(self) -> str:
         """Строковое представление книги"""
         logger.debug(LEXICON[LANG]['get_string'])
-        logger.debug(LEXICON[LANG]['book_details'].format(self.title, self.author, self.year))
-        return (f"Название: {self.title}, автор: {self.author}, год издания: {self.year}. "
-                f"Статус: {'выдана' if not self.status else 'в наличии'}")
+        logger.debug(LEXICON[LANG]['book_details'].format(self.id, self.title, self.author, self.year, self.status))
+        return LEXICON[LANG]['book_details'].format(self.id, self.title, self.author, self.year, self.status)
 
 
 class Library:
     """Класс библиотеки"""
     database = config.database_path + config.database_name
     library_object = None
+    NEXT_ID = 1
 
     def __new__(cls, *args, **kwargs):
         logger.debug(LEXICON[LANG]['check_singleton'])
         if not cls.library_object:
+            logger.debug(LEXICON[LANG]['create_singleton'])
             cls.library_object = super().__new__(cls)
         return cls.library_object
 
@@ -55,31 +50,37 @@ class Library:
 
     def load_library(self) -> None:
         """Загрузка библиотеки из JSON файла"""
-        logger.info(LEXICON[LANG]['load_from_json'])
+        logger.info(LEXICON[LANG]['load_raw_json'])
         try:
-            logger.debug(LEXICON[LANG]['load_raw_json'])
-            with open(self.database, 'r') as file:
+            logger.debug(LEXICON[LANG]['load_from_raw'])
+            with open(self.database, 'r', encoding='utf-8') as file:
                 result_json = json.load(file)
             logger.debug(LEXICON[LANG]['json_to_book'])
             for book_json in result_json.values():
-                logger.debug(book_json)
-                book = Book(book_json['title'], book_json['author'], book_json['year'], book_json['status'])
+                book = Book(book_json['title'], book_json['author'], book_json['year'], book_json['id'],
+                            book_json['status'])
+                logger.debug(LEXICON[LANG]['book_added'])
+                logger.debug(
+                    LEXICON[LANG]['book_details'].format(book.id, book.title, book.author, book.year, book.status))
                 self.books[book.id] = book
+                if book.id > self.NEXT_ID:
+                    self.NEXT_ID = book.id
+            self.NEXT_ID += 1
             logger.info(LEXICON[LANG]['library_loaded'])
-        except (FileNotFoundError, json.JSONDecodeError):
+        except Exception:
             logger.warning(LEXICON[LANG]['error_load_library'])
 
     def save_library(self) -> None:
         """Сохранение библиотеки в JSON файл"""
         logger.info(LEXICON[LANG]['save_library'])
-        with open(self.database, 'w') as file:
+        with open(self.database, 'w', encoding='utf-8') as file:
             json.dump(self.books, file, default=self.class_to_dict, ensure_ascii=False)
 
     @staticmethod
     def check_book_data(title: str = None, author: str = None, year: int = None) -> bool:
-        """Проверка корректности данных для поиска книги"""
+        """Проверка корректности данных для книги"""
         logger.info(LEXICON[LANG]['check_book_data'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
+        logger.debug(LEXICON[LANG]['book_details'].format('---', title, author, year, '---'))
         if title and author and year:
             try:
                 year = int(year)
@@ -93,97 +94,99 @@ class Library:
             return False
 
     def check_book(self, title: str = None, author: str = None, year: int = None) -> bool:
-        """Проверка наличия книги в библиотеке"""
+        """Проверка наличия книги по данным"""
         logger.info(LEXICON[LANG]['check_book_in_library'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
-        if self.check_book_data(title, author, year):
-            book_id = hash((title, author, year))
-            if book_id in self.books:
-                logger.info(LEXICON[LANG]['book_found'])
+        logger.debug(LEXICON[LANG]['book_details'].format('---', title, author, year, '---'))
+        for book in self.books.values():
+            if title == book.title and author == book.author and year == book.year:
+                logger.info(LEXICON[LANG]['book_with_data_found'].format(title, author, year))
                 return True
-            else:
-                logger.info(LEXICON[LANG]['book_not_found'].format(title, author, year))
-                return False
+        logger.info(LEXICON[LANG]['book_with_data_not_found'].format(title, author, year))
+        return False
+
+    def check_book_id(self, book_id: int) -> bool:
+        """Проверка наличия книги по ID"""
+        logger.info(LEXICON[LANG]['check_book_id'].format(book_id))
+        if book_id in self.books:
+            logger.info(LEXICON[LANG]['book_with_id_found'].format(book_id))
+            return True
+        else:
+            logger.info(LEXICON[LANG]['book_with_id_not_found'].format(book_id))
+            return False
 
     def search_books(self, title: str = None, author: str = None, year: str = None) -> list[Book]:
         """Поиск книг в библиотеке"""
         result = []
         logger.info(LEXICON[LANG]['book_search'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
+        logger.debug(LEXICON[LANG]['book_details'].format('---', title, author, year, '---'))
         for book in self.books.values():
             if title is None or title in book.title:
                 if author is None or author in book.author:
                     if year is None or year in str(book.year):
-                        logger.info(LEXICON[LANG]['book_found'])
+                        logger.info(LEXICON[LANG]['book_with_data_found'].format(title, author, year))
                         result.append(book)
                     else:
-                        logger.info(LEXICON[LANG]['book_not_found'].format(title, author, year))
+                        logger.info(LEXICON[LANG]['book_with_data_not_found'].format(title, author, year))
         return result
 
     def add_book(self, title: str = None, author: str = None, year: int = None) -> None:
         """Добавление книги в библиотеку"""
         logger.info(LEXICON[LANG]['attempt_add_book'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
+        logger.debug(LEXICON[LANG]['book_details'].format('---', title, author, year, '---'))
         if self.check_book_data(title, author, year):
             book = Book(title, author, year)
+            book.id = self.NEXT_ID
+            self.NEXT_ID += 1
             self.books[book.id] = book
-            logger.info(LEXICON[LANG]['book_added'].format(title, author, year))
+            logger.info(LEXICON[LANG]['book_added'])
+            logger.info(LEXICON[LANG]['book_details'].format(book.id, book.title, book.author, book.year, book.status))
 
-    def delete_book(self, title: str = None, author: str = None, year: int = None) -> None:
+    def delete_book(self, book_id: int) -> None:
         """Удаление книги из библиотеки"""
         logger.info(LEXICON[LANG]['attempt_delete_book'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
-        if self.check_book_data(title, author, year):
-            logger.info(LEXICON[LANG]['get_hash'])
-            book_id = hash((title, author, year))
-            if book_id in self.books:
-                del self.books[book_id]
-                logger.info(LEXICON[LANG]['book_deleted'])
-            else:
-                logger.info(LEXICON[LANG]['book_not_found'].format(title, author, year))
+        if self.check_book_id(book_id):
+            logger.info(LEXICON[LANG]['book_with_id_found'].format(book_id))
+            del self.books[book_id]
+            logger.info(LEXICON[LANG]['book_deleted'])
+        else:
+            logger.info(LEXICON[LANG]['book_with_id_not_found'].format(book_id))
 
     def show_all_books(self) -> list[Book]:
         """Вывод всех книг в библиотеке"""
         logger.info(LEXICON[LANG]['show_all_books'])
         return list(self.books.values())
 
-    def get_book(self, title: str = None, author: str = None, year: int = None) -> Book:
-        """Получение данных книги из библиотеки"""
-        logger.info(LEXICON[LANG]['get_book_data'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
-        if self.check_book_data(title, author, year):
-            logger.info(LEXICON[LANG]['get_hash'])
-            book_id = hash((title, author, year))
-            if book_id in self.books:
-                logger.info(LEXICON[LANG]['get_book_data_complete'])
-                return self.books[book_id]
-            else:
-                logger.info(LEXICON[LANG]['book_not_found'].format(title, author, year))
-
-    def get_status(self, title: str = None, author: str = None, year: int = None) -> bool:
+    def get_status(self, book_id: int) -> str | None:
         """Получение статуса книги"""
         logger.info(LEXICON[LANG]['get_book_status'])
-        if self.check_book_data(title, author, year):
-            book_id = hash((title, author, year))
-            if book_id in self.books:
-                logger.info(LEXICON[LANG]['get_book_status_complete'])
-                return self.books[book_id].status
-            else:
-                logger.info(LEXICON[LANG]['book_not_found'].format(title, author, year))
-                return False
+        if book_id in self.books:
+            logger.info(LEXICON[LANG]['get_book_status_complete'])
+            return self.books[book_id].status
+        else:
+            logger.info(LEXICON[LANG]['book_with_id_not_found'].format(book_id))
+            return None
 
-    def change_status(self, title: str = None, author: str = None, year: int = None) -> None:
+    def get_book_details(self, book_id: int) -> tuple | None:
+        """Получение детальной информации о книге"""
+        logger.info(LEXICON[LANG]['get_book_data'])
+        if book_id in self.books:
+            logger.info(LEXICON[LANG]['book_with_id_found'].format(book_id))
+            logger.info(
+                LEXICON[LANG]['book_details'].format(book_id, self.books[book_id].title, self.books[book_id].author,
+                                                     self.books[book_id].year, self.books[book_id].status))
+            return self.books[book_id].title, self.books[book_id].author, self.books[book_id].year, self.books[book_id].status
+        else:
+            logger.info(LEXICON[LANG]['book_with_id_not_found'].format(book_id))
+            return None
+
+    def change_status(self, book_id: int, status: str) -> None:
         """Изменение статуса книги"""
-        logger.info(LEXICON[LANG]['change_book_status'])
-        logger.debug(LEXICON[LANG]['book_details'].format(title, author, year))
-        if self.check_book_data(title, author, year):
-            logger.info(LEXICON[LANG]['get_hash'])
-            book_id = hash((title, author, year))
-            if book_id in self.books:
-                self.books[book_id].status = not self.books[book_id].status
-                logger.info(LEXICON[LANG]['change_book_status_complete'])
-            else:
-                logger.info(LEXICON[LANG]['book_not_found'].format(title, author, year))
+        logger.info(LEXICON[LANG]['change_status'])
+        if book_id in self.books:
+            self.books[book_id].status = status
+            logger.info(LEXICON[LANG]['change_book_status_complete'])
+        else:
+            logger.info(LEXICON[LANG]['book_with_id_not_found'].format(book_id))
 
 
 logger = logging.getLogger(__name__)

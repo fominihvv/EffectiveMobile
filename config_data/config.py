@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from environs import Env
 from lexicon.lexicon import LEXICON
 
-MIN_LOG_LEVEL = logging.INFO
+MIN_LOG_LEVEL = logging.DEBUG
 LANG = 'RU'
 
 logger = logging.getLogger(__name__)
