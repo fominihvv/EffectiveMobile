@@ -71,13 +71,16 @@ def add_book():
     print(LEXICON[LANG]['1_add_book'])
     print(LEXICON[LANG]['-'])
     book = new_book_data()
-    if library.check_book(*book):
+    result = library.add_book(*book)
+    if result == 0:
+        logger.info(LEXICON[LANG]['book_added'])
+        print(LEXICON[LANG]['book_added'])
+    elif result == 1:
         logger.info(LEXICON[LANG]['book_exist'])
         print(LEXICON[LANG]['book_exist'])
     else:
-        library.add_book(*book)
-        logger.info(LEXICON[LANG]['book_added'])
-        print(LEXICON[LANG]['book_added'])
+        logger.info(LEXICON[LANG]['book_not_added'])
+        print(LEXICON[LANG]['book_not_added'])
 
 
 def delete_book():

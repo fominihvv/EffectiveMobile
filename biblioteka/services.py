@@ -40,7 +40,7 @@ class Library:
     def __init__(self) -> None:
         logger.info(LEXICON[LANG]['init_library'])
         self.books = {}
-        self.load_library()
+
 
     @staticmethod
     def class_to_dict(book) -> dict:
@@ -100,9 +100,9 @@ class Library:
         for book in self.books.values():
             if title == book.title and author == book.author and year == book.year:
                 logger.info(LEXICON[LANG]['book_with_data_found'].format(title, author, year))
-                return True
+                return False
         logger.info(LEXICON[LANG]['book_with_data_not_found'].format(title, author, year))
-        return False
+        return True
 
     def check_book_id(self, book_id: int) -> bool:
         """Проверка наличия книги по ID"""
@@ -129,17 +129,25 @@ class Library:
                         logger.info(LEXICON[LANG]['book_with_data_not_found'].format(title, author, year))
         return result
 
-    def add_book(self, title: str = None, author: str = None, year: int = None) -> None:
+    def add_book(self, title: str = None, author: str = None, year: int = None) -> int:
         """Добавление книги в библиотеку"""
         logger.info(LEXICON[LANG]['attempt_add_book'])
         logger.debug(LEXICON[LANG]['book_details'].format('---', title, author, year, '---'))
         if self.check_book_data(title, author, year):
-            book = Book(title, author, year)
-            book.id = self.NEXT_ID
-            self.NEXT_ID += 1
-            self.books[book.id] = book
-            logger.info(LEXICON[LANG]['book_added'])
-            logger.info(LEXICON[LANG]['book_details'].format(book.id, book.title, book.author, book.year, book.status))
+            if self.check_book(title, author, year):
+                book = Book(title, author, year)
+                book.id = self.NEXT_ID
+                self.NEXT_ID += 1
+                self.books[book.id] = book
+                logger.info(LEXICON[LANG]['book_added'])
+                logger.info(LEXICON[LANG]['book_details'].format(book.id, book.title, book.author, book.year, book.status))
+                return 0
+            else:
+                logger.info(LEXICON[LANG]['book_exist'])
+                return 1
+        else:
+            logger.info(LEXICON[LANG]['book_not_added'])
+            return 2
 
     def delete_book(self, book_id: int) -> None:
         """Удаление книги из библиотеки"""
@@ -197,3 +205,4 @@ logging.basicConfig(
 
 # Инициализация библиотеки
 library = Library()
+library.load_library()
