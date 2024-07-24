@@ -36,24 +36,25 @@ def get_menu_command() -> int:
             print(LEXICON[LANG]['not_int'])
 
 
+def get_book_param(text_input: str, text_log: str, text_screen: str) -> str:
+    """ Запрос параметра книги """
+    while True:
+        result = input(LEXICON[LANG][text_input])
+        if result:
+            break
+        logger.debug(LEXICON[LANG][text_log])
+        print(LEXICON[LANG][text_screen])
+    return result
+
+
 def new_book_data() -> tuple:
     """ Запрос корректных данных о новой книге """
     logger.info(LEXICON[LANG]['new_book_data'])
     while True:
+        title = get_book_param('enter_book_title', 'no_book_title', 'book_title_not_entered')
+        author = get_book_param('enter_author_name', 'no_author_name', 'author_name_not_entered')
         while True:
-            title = input(LEXICON[LANG]['enter_book_title'])
-            if title:
-                break
-            logger.debug(LEXICON[LANG]['no_book_title'])
-            print(LEXICON[LANG]['book_title_not_entered'])
-        while True:
-            author = input(LEXICON[LANG]['enter_author_name'])
-            if author:
-                break
-            logger.debug(LEXICON[LANG]['no_author_name'])
-            print(LEXICON[LANG]['author_name_not_entered'])
-        while True:
-            year = input(LEXICON[LANG]['enter_book_year'])
+            year = get_book_param('enter_book_year', 'no_book_year', 'book_year_not_entered')
             try:
                 year = int(year)
                 break
@@ -89,7 +90,7 @@ def delete_book():
     print(LEXICON[LANG]['2_delete_book'])
     print(LEXICON[LANG]['-'])
     while True:
-        book_id = input(LEXICON[LANG]['enter_book_id'])
+        book_id = get_book_param('enter_book_id', 'no_book_id', 'book_id_not_entered')
         try:
             book_id = int(book_id)
             logger.info(LEXICON[LANG]['book_id_entered'].format(book_id))
@@ -113,15 +114,7 @@ def search_book():
     print(LEXICON[LANG]['-'])
     title = input(LEXICON[LANG]['enter_book_title_or_empty'])
     author = input(LEXICON[LANG]['enter_author_name_or_empty'])
-    while True:
-        year = input(LEXICON[LANG]['enter_book_year_or_empty'])
-        try:
-            year = int(year)
-            break
-        except ValueError:
-            logger.debug(LEXICON[LANG]['not_int'])
-            print(LEXICON[LANG]['not_int'])
-        break
+    year = input(LEXICON[LANG]['enter_book_year_or_empty'])
     logger.info(LEXICON[LANG]['all_values_entered'].format(title, author, year))
     logger.info(LEXICON[LANG]['start_books_search'])
     result = library.search_books(title, author, year)
@@ -154,7 +147,7 @@ def change_status():
     print(LEXICON[LANG]['5_change_book_status'])
     print(LEXICON[LANG]['-'])
     while True:
-        book_id = input(LEXICON[LANG]['enter_book_id'])
+        book_id = get_book_param('enter_book_id', 'no_book_id', 'book_id_not_entered')
         try:
             book_id = int(book_id)
             break

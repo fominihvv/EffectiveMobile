@@ -41,7 +41,6 @@ class Library:
         logger.info(LEXICON[LANG]['init_library'])
         self.books = {}
 
-
     @staticmethod
     def class_to_dict(book) -> dict:
         """Класс книги в словарь"""
@@ -73,8 +72,12 @@ class Library:
     def save_library(self) -> None:
         """Сохранение библиотеки в JSON файл"""
         logger.info(LEXICON[LANG]['save_library'])
-        with open(self.database, 'w', encoding='utf-8') as file:
-            json.dump(self.books, file, default=self.class_to_dict, ensure_ascii=False)
+        try:
+            with open(self.database, 'w', encoding='utf-8') as file:
+                json.dump(self.books, file, default=self.class_to_dict, ensure_ascii=False)
+            logger.info(LEXICON[LANG]['save_library_complete'])
+        except Exception:
+            logger.warning(LEXICON[LANG]['save_library_error'])
 
     @staticmethod
     def check_book_data(title: str = None, author: str = None, year: int = None) -> bool:
@@ -140,7 +143,8 @@ class Library:
                 self.NEXT_ID += 1
                 self.books[book.id] = book
                 logger.info(LEXICON[LANG]['book_added'])
-                logger.info(LEXICON[LANG]['book_details'].format(book.id, book.title, book.author, book.year, book.status))
+                logger.info(
+                    LEXICON[LANG]['book_details'].format(book.id, book.title, book.author, book.year, book.status))
                 return 0
             else:
                 logger.info(LEXICON[LANG]['book_exist'])
@@ -182,7 +186,8 @@ class Library:
             logger.info(
                 LEXICON[LANG]['book_details'].format(book_id, self.books[book_id].title, self.books[book_id].author,
                                                      self.books[book_id].year, self.books[book_id].status))
-            return self.books[book_id].title, self.books[book_id].author, self.books[book_id].year, self.books[book_id].status
+            return self.books[book_id].title, self.books[book_id].author, self.books[book_id].year, self.books[
+                book_id].status
         else:
             logger.info(LEXICON[LANG]['book_with_id_not_found'].format(book_id))
             return None

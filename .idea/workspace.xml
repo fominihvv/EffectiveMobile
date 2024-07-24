@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="deaa5ea7-b9d0-49fe-b77b-248a6d72af04" name="Changes" comment="Вечер 23.07.2024 Осталось создать блок тестирования.">
-      <change afterPath="$PROJECT_DIR$/test/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/test/test.py" afterDir="false" />
+    <list default="true" id="deaa5ea7-b9d0-49fe-b77b-248a6d72af04" name="Changes" comment="Вечер 23.07.2024 Часть 2. Остался пункт 3 - Описание функционала: Подробное описание функционала приложения в README файле.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/biblioteka/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/biblioteka/services.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lexicon/lexicon.py" beforeDir="false" afterPath="$PROJECT_DIR$/lexicon/lexicon.py" afterDir="false" />
@@ -52,7 +50,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="Python.test">
+  <component name="RunManager" selected="Python.main">
     <configuration name="config" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="EffectiveMobile" />
       <option name="ENV_FILES" value="" />
@@ -147,8 +145,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.test" />
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.config" />
         <item itemvalue="Python.menu" />
       </list>
@@ -172,7 +170,7 @@
       <updated>1721394700138</updated>
       <workItem from="1721394701581" duration="1758000" />
       <workItem from="1721396478578" duration="8901000" />
-      <workItem from="1721652342982" duration="26294000" />
+      <workItem from="1721652342982" duration="31836000" />
     </task>
     <task id="LOCAL-00001" summary="Вечер 19.07.2024 набросок-рыба библиотеки">
       <option name="closed" value="true" />
@@ -206,7 +204,23 @@
       <option name="project" value="LOCAL" />
       <updated>1721736736968</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Вечер 23.07.2024 Часть 2. Остался пункт 3 - Описание функционала: Подробное описание функционала приложения в README файле.">
+      <option name="closed" value="true" />
+      <created>1721740639297</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1721740639297</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Вечер 23.07.2024 Часть 2. Остался пункт 3 - Описание функционала: Подробное описание функционала приложения в README файле.">
+      <option name="closed" value="true" />
+      <created>1721741096325</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1721741096325</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -227,12 +241,13 @@
     <MESSAGE value="Вечер 19.07.2024 набросок-рыба библиотеки" />
     <MESSAGE value="Вечер 22.07.2024. Осталось заменить текстовки в модуле menu.py" />
     <MESSAGE value="Вечер 23.07.2024 Осталось создать блок тестирования." />
-    <option name="LAST_COMMIT_MESSAGE" value="Вечер 23.07.2024 Осталось создать блок тестирования." />
+    <MESSAGE value="Вечер 23.07.2024 Часть 2. Остался пункт 3 - Описание функционала: Подробное описание функционала приложения в README файле." />
+    <option name="LAST_COMMIT_MESSAGE" value="Вечер 23.07.2024 Часть 2. Остался пункт 3 - Описание функционала: Подробное описание функционала приложения в README файле." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/EffectiveMobile$config.coverage" NAME="config Coverage Results" MODIFIED="1721723232900" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/config_data" />
-    <SUITE FILE_PATH="coverage/EffectiveMobile$main.coverage" NAME="main Coverage Results" MODIFIED="1721740389261" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/EffectiveMobile$test.coverage" NAME="test Coverage Results" MODIFIED="1721740533061" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
+    <SUITE FILE_PATH="coverage/EffectiveMobile$main.coverage" NAME="main Coverage Results" MODIFIED="1721803595220" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/EffectiveMobile$test.coverage" NAME="test Coverage Results" MODIFIED="1721741790138" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/EffectiveMobile$menu.coverage" NAME="menu Coverage Results" MODIFIED="1721656705054" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/menu" />
   </component>
 </project>
